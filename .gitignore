@@ -38,4 +38,6 @@
 # Generated directories
 obj/*
 bin/*
+testobj/*
+testbin/*
 
