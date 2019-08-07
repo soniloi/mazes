@@ -12,7 +12,7 @@ CC = g++
 COMPILE = $(CC) $(CFLAGS)
 LINK = $(CC) $(LFLAGS)
 
-_OBJS = $(APP).o
+_OBJS = $(APP).o game.o
 OBJS = $(patsubst %, $(OBJDIR)/%,$(_OBJS))
 
 $(APP): $(OBJS)
