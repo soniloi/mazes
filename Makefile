@@ -1,34 +1,36 @@
 SRCDIR = src
-_OBJDIR = obj
-OBJDIR := $(_OBJDIR)
+OBJDIR = obj
+BINDIR = bin
 APP = main
 
 MKDIR_P = mkdir -p
 RM_RF = rm -rf
 
 LFLAGS = -Wall
-CFLAGS = -Wall -c -O0 --std=c++11 -g -Iinclude
+CFLAGS = -Wall -c -O0 --std=c++11 -g
 CC = g++
 COMPILE = $(CC) $(CFLAGS)
 LINK = $(CC) $(LFLAGS)
 
-_OBJS = $(APP).o game.o
-OBJS = $(patsubst %, $(OBJDIR)/%,$(_OBJS))
+SRCS := $(wildcard $(SRCDIR)/*.cc)
+OBJS := $(patsubst $(SRCDIR)/%.cc, $(OBJDIR)/%.o, $(SRCS))
 
-$(APP): $(OBJS)
-	$(LINK) -o $@ $^
+$(APP): $(OBJS) | $(BINDIR)
+	$(LINK) $^ -o $(BINDIR)/$@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cc
-	$(OBJDST)
-	$(COMPILE) -o $@ $<
+	$(COMPILE) $< -o $@
 
 $(OBJS): | $(OBJDIR)
 
 $(OBJDIR):
 	$(MKDIR_P) $(OBJDIR)
 
+$(BINDIR):
+	$(MKDIR_P) $(BINDIR)
+
 .PHONY: clean
 
 clean:
-	$(RM_RF) $(_OBJDIR) $(APP)
+	$(RM_RF) $(OBJDIR) $(BINDIR)
 Debug: $(APP)
