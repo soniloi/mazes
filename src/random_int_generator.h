@@ -3,7 +3,9 @@
 
 #include <random>
 
-class RandomIntGenerator {
+#include "int_generator.h"
+
+class RandomIntGenerator : public IntGenerator {
 public:
     RandomIntGenerator(int seed);
     int generate(unsigned int max);
