@@ -4,7 +4,7 @@
 class IntGenerator {
 public:
     IntGenerator() {};
-    virtual int generate(unsigned int max) = 0;
+    virtual int generate(int min, int max) = 0;
 };
 
 #endif

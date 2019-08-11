@@ -7,7 +7,7 @@ namespace {
 TEST(GenerateTest, TestResult) {
     RandomIntGenerator generator(3010349);
 
-    ASSERT_EQ(41, generator.generate(491));
+    ASSERT_EQ(40, generator.generate(0, 490));
 }
 
 }

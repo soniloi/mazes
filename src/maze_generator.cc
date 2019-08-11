@@ -27,7 +27,7 @@ bool** MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned i
             std::cout << "\t\t(" << it->first << "," << it->second << ")" << std::endl;
         }
 
-        int frontier_index = ig->generate(frontier_cells.size()) - 1;
+        int frontier_index = ig->generate(0, frontier_cells.size() - 1);
         std::pair<int, int> frontier_cell = frontier_cells[frontier_index];
         frontier_cell_y = frontier_cell.first;
         frontier_cell_x = frontier_cell.second;
@@ -39,7 +39,7 @@ bool** MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned i
             std::cout << "\t\t(" << it->first << "," << it->second << ")" << std::endl;
         }
 
-        int passage_index = ig->generate(passage_cells.size()) - 1;
+        int passage_index = ig->generate(0, passage_cells.size() - 1);
         std::pair<int, int> passage_cell = passage_cells[passage_index];
         unsigned int passage_cell_y = passage_cell.first;
         unsigned int passage_cell_x = passage_cell.second;

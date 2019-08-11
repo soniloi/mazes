@@ -4,7 +4,6 @@
 #include "maze_generator.h"
 #include "mock_int_generator.h"
 
-
 using testing::_;
 using testing::Return;
 
@@ -15,7 +14,7 @@ TEST(GenerateTest, TestMazeAlwaysSelectingFirst) {
     unsigned int width = 7;
     MockIntGenerator ig;
     MazeGenerator generator;
-    EXPECT_CALL(ig, generate(_)).WillRepeatedly(Return(1));
+    EXPECT_CALL(ig, generate(0, _)).WillRepeatedly(Return(0));
     bool expected[height][width] = {
         {false, false, false, false, false, false, false},
         {false, true,  true,  true,  true,  true,  false},

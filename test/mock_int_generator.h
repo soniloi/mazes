@@ -7,7 +7,7 @@
 
 class MockIntGenerator : public IntGenerator {
 public:
-    MOCK_METHOD1(generate, int(unsigned int max));
+    MOCK_METHOD2(generate, int(int min, int max));
 };
 
 #endif
