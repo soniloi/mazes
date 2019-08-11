@@ -51,8 +51,8 @@ LINK_TEST = $(CC) $(TLFLAGS)
 SRCS_TEST := $(wildcard $(SRCDIR_TEST)/*.cc)
 OBJS_TEST := $(patsubst $(SRCDIR_TEST)/%.cc, $(OBJDIR_TEST)/%.o, $(SRCS_TEST))
 
-test: $(OBJS) $(OBJDIR_TEST)/test_$(COMPONENT).o | $(BINDIR_TEST)
-	$(CC) $(OBJS_TESTING) $(OBJDIR_TEST)/test_$(COMPONENT).o -o $(BINDIR_TEST)/test_$(COMPONENT) $(TLFLAGS)
+test: $(OBJS) $(OBJDIR_TEST)/$(COMPONENT)_test.o | $(BINDIR_TEST)
+	$(CC) $(OBJS_TESTING) $(OBJDIR_TEST)/$(COMPONENT)_test.o -o $(BINDIR_TEST)/$(COMPONENT)_test $(TLFLAGS)
 
 $(OBJDIR_TEST)/%.o: $(SRCDIR_TEST)/%.cc
 	$(COMPILE_TEST) $< -o $@
