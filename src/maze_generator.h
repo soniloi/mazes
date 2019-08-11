@@ -1,6 +1,7 @@
 #ifndef MAZE_GENERATOR_H
 #define MAZE_GENERATOR_H
 
+#include <cassert>
 #include <vector>
 
 #include "int_generator.h"

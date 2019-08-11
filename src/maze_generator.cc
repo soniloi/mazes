@@ -4,6 +4,11 @@
 #include <iostream>
 
 bool** MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int width) {
+    assert(height >= 3 && "Height must be at least 3");
+    assert(width >= 3 && "Width must be at least 3");
+    assert(height % 2 == 1 && "Height must be odd");
+    assert(width % 2 == 1 && "Width must be odd");
+
     bool** result = new bool*[height];
     for (unsigned int i = 0; i < height; ++i) {
         result[i] = new bool[width];

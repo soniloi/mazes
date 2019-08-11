@@ -9,7 +9,43 @@ using testing::Return;
 
 namespace {
 
-TEST(GenerateTest, TestMazeAlwaysSelectingFirst) {
+TEST(GenerateTest, SmallHeight) {
+    MockIntGenerator ig;
+    MazeGenerator generator;
+
+    EXPECT_DEATH({
+        generator.generate(&ig, 2, 11);
+    }, ".*Height must be at least 3");
+}
+
+TEST(GenerateTest, SmallWidth) {
+    MockIntGenerator ig;
+    MazeGenerator generator;
+
+    EXPECT_DEATH({
+        generator.generate(&ig, 7, 1);
+    }, ".*Width must be at least 3");
+}
+
+TEST(GenerateTest, EvenHeight) {
+    MockIntGenerator ig;
+    MazeGenerator generator;
+
+    EXPECT_DEATH({
+        generator.generate(&ig, 6, 11);
+    }, ".*Height must be odd");
+}
+
+TEST(GenerateTest, EvenWidth) {
+    MockIntGenerator ig;
+    MazeGenerator generator;
+
+    EXPECT_DEATH({
+        generator.generate(&ig, 7, 10);
+    }, ".*Width must be odd");
+}
+
+TEST(GenerateTest, AlwaysSelectingFirst) {
     unsigned int height = 5;
     unsigned int width = 7;
     MockIntGenerator ig;
@@ -31,7 +67,6 @@ TEST(GenerateTest, TestMazeAlwaysSelectingFirst) {
         }
     }
 }
-
 }
 
 int main(int argc, char ** argv) {

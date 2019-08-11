@@ -7,8 +7,8 @@ int main(int argc, char ** argv) {
     RandomIntGenerator rng(3010349);
     MazeGenerator generator;
 
+    unsigned int height = 17;
     unsigned int width = 35;
-    unsigned int height = 16;
     bool** maze = generator.generate(&rng, height, width);
 
     for (unsigned int i = 0; i < height; ++i) {
