@@ -5,11 +5,13 @@
 
 class Maze {
 public:
-    Maze(std::vector<std::vector<bool>> grid);
-    std::vector<std::vector<bool>> grid();
+    using MazeRow = std::vector<bool>;
+    using MazeGrid = std::vector<MazeRow>;
+    Maze(MazeGrid grid);
+    MazeGrid grid();
 
 private:
-    std::vector<std::vector<bool>> grid_;
+    MazeGrid grid_;
 };
 
 #endif

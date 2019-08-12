@@ -7,6 +7,8 @@
 using testing::_;
 using testing::Return;
 
+using MazeGrid = Maze::MazeGrid;
+
 namespace {
 
 class MazeGeneratorTest : public ::testing::Test {
@@ -53,7 +55,7 @@ TEST_F(MazeGeneratorTest, GenerateAlwaysSelectingFirst) {
 
     Maze maze = generator.generate(&ig, height, width);
 
-    std::vector<std::vector<bool>> actual = maze.grid();
+    MazeGrid actual = maze.grid();
     for (unsigned int i = 0; i < height; ++i) {
         for (unsigned int j = 0; j < width; ++j) {
             ASSERT_EQ(expected[i][j], actual[i][j]);

@@ -3,15 +3,19 @@
 // TODO: remove
 #include <iostream>
 
+using MazeRow = Maze::MazeRow;
+using MazeGrid = Maze::MazeGrid;
+using Coordinates = MazeGenerator::Coordinates;
+
 Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int width) {
     assert(height >= 3 && "Height must be at least 3");
     assert(width >= 3 && "Width must be at least 3");
     assert(height % 2 == 1 && "Height must be odd");
     assert(width % 2 == 1 && "Width must be odd");
 
-    std::vector<std::vector<bool>> result(height);
+    MazeGrid result(height);
     for (unsigned int i = 0; i < height; ++i) {
-        result[i] = std::vector<bool>(width, false);
+        result[i] = MazeRow(width, false);
     }
 
     // TODO: randomization should preferably choose coords near a corner
@@ -22,7 +26,7 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
 
     result[frontier_cell_y][frontier_cell_x] = true;
 
-    std::vector<std::pair<int, int>> frontier_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, false);
+    std::vector<Coordinates> frontier_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, false);
     std::cout << "starting at (" << start_y << "," << start_x << ")" << std::endl;
 
     while(!frontier_cells.empty()) {
@@ -32,19 +36,19 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         }
 
         int frontier_index = ig->generate(0, frontier_cells.size() - 1);
-        std::pair<int, int> frontier_cell = frontier_cells[frontier_index];
+        Coordinates frontier_cell = frontier_cells[frontier_index];
         frontier_cell_y = frontier_cell.first;
         frontier_cell_x = frontier_cell.second;
         std::cout << "visiting (" << frontier_cell_y << "," << frontier_cell_x << ")" << std::endl;
 
-        std::vector<std::pair<int, int>> passage_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, true);
+        std::vector<Coordinates> passage_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, true);
         std::cout << "\tpassage cells: " << std::endl;
         for (auto it = passage_cells.begin(); it != passage_cells.end(); it++) {
             std::cout << "\t\t(" << it->first << "," << it->second << ")" << std::endl;
         }
 
         int passage_index = ig->generate(0, passage_cells.size() - 1);
-        std::pair<int, int> passage_cell = passage_cells[passage_index];
+        Coordinates passage_cell = passage_cells[passage_index];
         unsigned int passage_cell_y = passage_cell.first;
         unsigned int passage_cell_x = passage_cell.second;
 
@@ -55,13 +59,13 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         std::cout << "\tmarking (" << open_y << "," << open_x << ") passage" << std::endl;
         std::cout << "\tmarking (" << frontier_cell_y << "," << frontier_cell_x << ") passage" << std::endl;
 
-        std::vector<std::pair<int, int>> closed_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, false);
+        std::vector<Coordinates> closed_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, false);
         std::cout << "\tclosed cells: " << std::endl;
         for (auto it = closed_cells.begin(); it != closed_cells.end(); it++) {
             std::cout << "\t\t(" << it->first << "," << it->second << ")" << std::endl;
         }
         for (auto it = closed_cells.begin(); it != closed_cells.end(); it++) {
-            std::pair<int, int> coords = *it;
+            Coordinates coords = *it;
             if (!result[it->first][it->second] && !contains_coords(frontier_cells, coords)) {
                 frontier_cells.push_back(coords);
             }
@@ -86,31 +90,30 @@ unsigned int MazeGenerator::get_valid_index(IntGenerator* ig, unsigned int limit
     return ig->generate(0, limit / 2 - 1) * 2 + 1;
 }
 
-std::vector<std::pair<int, int>> MazeGenerator::calculateNeighbours(std::vector<std::vector<bool>> maze,
-    unsigned int y, unsigned int x, bool state) {
+std::vector<Coordinates> MazeGenerator::calculateNeighbours(MazeGrid maze, unsigned int y, unsigned int x, bool state) {
     unsigned int height = maze.size();
     unsigned int width = maze[0].size();
 
-    std::vector<std::pair<int, int>> neighbours;
+    std::vector<Coordinates> neighbours;
 
     if (y >= 2 && maze[y-2][x] == state) {
-        neighbours.push_back(std::pair<int, int> (y-2, x));
+        neighbours.push_back(Coordinates(y-2, x));
     }
     if (y < (height - 2) && maze[y+2][x] == state) {
-        neighbours.push_back(std::pair<int, int> (y+2, x));
+        neighbours.push_back(Coordinates(y+2, x));
     }
     if (x >= 2 && maze[y][x-2] == state) {
-        neighbours.push_back(std::pair<int, int> (y, x-2));
+        neighbours.push_back(Coordinates(y, x-2));
     }
     if (x < (width - 2) && maze[y][x+2] == state) {
-        neighbours.push_back(std::pair<int, int> (y, x+2));
+        neighbours.push_back(Coordinates(y, x+2));
     }
 
     return neighbours;
 }
 
-bool MazeGenerator::contains_coords(std::vector<std::pair<int, int>> coords_vec, std::pair<int, int> coords) {
-    for (auto it = coords_vec.begin(); it != coords_vec.end(); it++) {
+bool MazeGenerator::contains_coords(std::vector<Coordinates> coords_collection, Coordinates coords) {
+    for (auto it = coords_collection.begin(); it != coords_collection.end(); it++) {
         if (it->first == coords.first && it->second == coords.second) {
             return true;
         }
