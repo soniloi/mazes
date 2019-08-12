@@ -5,10 +5,11 @@
 #include <vector>
 
 #include "int_generator.h"
+#include "maze.h"
 
 class MazeGenerator {
 public:
-    bool** generate(IntGenerator* ig, unsigned int height, unsigned int width);
+    Maze generate(IntGenerator* ig, unsigned int height, unsigned int width);
 private:
     std::vector<std::pair<int, int>> calculateNeighbours(bool** maze, unsigned int height, unsigned int width,
         unsigned int y, unsigned int x, bool state);

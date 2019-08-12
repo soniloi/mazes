@@ -51,8 +51,9 @@ TEST_F(MazeGeneratorTest, GenerateAlwaysSelectingFirst) {
         {false, false, false, false, false, false, false}
     };
 
-    bool** actual = generator.generate(&ig, height, width);
+    Maze maze = generator.generate(&ig, height, width);
 
+    bool** actual = maze.grid();
     for (unsigned int i = 0; i < height; ++i) {
         for (unsigned int j = 0; j < width; ++j) {
             ASSERT_EQ(expected[i][j], actual[i][j]);

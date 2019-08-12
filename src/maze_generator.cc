@@ -3,7 +3,7 @@
 // TODO: remove
 #include <iostream>
 
-bool** MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int width) {
+Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int width) {
     assert(height >= 3 && "Height must be at least 3");
     assert(width >= 3 && "Width must be at least 3");
     assert(height % 2 == 1 && "Height must be odd");
@@ -80,7 +80,7 @@ bool** MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned i
         }
         */
     }
-    return result;
+    return Maze(result);
 }
 
 std::vector<std::pair<int, int>> MazeGenerator::calculateNeighbours(bool** maze, unsigned int height, unsigned int width,
