@@ -14,14 +14,16 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         result[i] = std::vector<bool>(width, false);
     }
 
-    // TODO: randomize, preferably choosing coords near a corner?
-    unsigned int frontier_cell_y = 1;
-    unsigned int frontier_cell_x = 1;
+    // TODO: randomization should preferably choose coords near a corner
+    unsigned int start_y = get_valid_index(ig, height);
+    unsigned int start_x = get_valid_index(ig, width);
+    unsigned int frontier_cell_y = start_y;
+    unsigned int frontier_cell_x = start_x;
 
     result[frontier_cell_y][frontier_cell_x] = true;
 
     std::vector<std::pair<int, int>> frontier_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, false);
-    std::cout << "starting at (" << frontier_cell_y << "," << frontier_cell_x << ")" << std::endl;
+    std::cout << "starting at (" << start_y << "," << start_x << ")" << std::endl;
 
     while(!frontier_cells.empty()) {
         std::cout << "\tfrontier cells: " << std::endl;
@@ -78,6 +80,10 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         */
     }
     return Maze(result);
+}
+
+unsigned int MazeGenerator::get_valid_index(IntGenerator* ig, unsigned int limit) {
+    return ig->generate(0, limit / 2 - 1) * 2 + 1;
 }
 
 std::vector<std::pair<int, int>> MazeGenerator::calculateNeighbours(std::vector<std::vector<bool>> maze,
