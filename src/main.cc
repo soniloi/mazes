@@ -12,7 +12,7 @@ int main(int argc, char ** argv) {
     unsigned int width = 35;
     Maze maze = generator.generate(&rng, height, width);
 
-    bool** grid = maze.grid();
+    std::vector<std::vector<bool>> grid = maze.grid();
     for (unsigned int i = 0; i < height; ++i) {
         for (unsigned int j = 0; j < width; ++j) {
             if (!grid[i][j]) {

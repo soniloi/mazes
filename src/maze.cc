@@ -1,9 +1,9 @@
 #include "maze.h"
 
-Maze::Maze(bool** grid) {
+Maze::Maze(std::vector<std::vector<bool>> grid) {
     this->grid_ = grid;
 }
 
-bool** Maze::grid() {
+std::vector<std::vector<bool>> Maze::grid() {
     return this->grid_;
 }

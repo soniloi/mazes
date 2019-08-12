@@ -9,12 +9,9 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
     assert(height % 2 == 1 && "Height must be odd");
     assert(width % 2 == 1 && "Width must be odd");
 
-    bool** result = new bool*[height];
+    std::vector<std::vector<bool>> result(height);
     for (unsigned int i = 0; i < height; ++i) {
-        result[i] = new bool[width];
-        for (unsigned int j = 0; j < width; ++j) {
-            result[i][j] = false;
-        }
+        result[i] = std::vector<bool>(width, false);
     }
 
     // TODO: randomize, preferably choosing coords near a corner?
@@ -23,7 +20,7 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
 
     result[frontier_cell_y][frontier_cell_x] = true;
 
-    std::vector<std::pair<int, int>> frontier_cells = calculateNeighbours(result, height, width, frontier_cell_y, frontier_cell_x, false);
+    std::vector<std::pair<int, int>> frontier_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, false);
     std::cout << "starting at (" << frontier_cell_y << "," << frontier_cell_x << ")" << std::endl;
 
     while(!frontier_cells.empty()) {
@@ -38,7 +35,7 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         frontier_cell_x = frontier_cell.second;
         std::cout << "visiting (" << frontier_cell_y << "," << frontier_cell_x << ")" << std::endl;
 
-        std::vector<std::pair<int, int>> passage_cells = calculateNeighbours(result, height, width, frontier_cell_y, frontier_cell_x, true);
+        std::vector<std::pair<int, int>> passage_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, true);
         std::cout << "\tpassage cells: " << std::endl;
         for (auto it = passage_cells.begin(); it != passage_cells.end(); it++) {
             std::cout << "\t\t(" << it->first << "," << it->second << ")" << std::endl;
@@ -56,7 +53,7 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         std::cout << "\tmarking (" << open_y << "," << open_x << ") passage" << std::endl;
         std::cout << "\tmarking (" << frontier_cell_y << "," << frontier_cell_x << ") passage" << std::endl;
 
-        std::vector<std::pair<int, int>> closed_cells = calculateNeighbours(result, height, width, frontier_cell_y, frontier_cell_x, false);
+        std::vector<std::pair<int, int>> closed_cells = calculateNeighbours(result, frontier_cell_y, frontier_cell_x, false);
         std::cout << "\tclosed cells: " << std::endl;
         for (auto it = closed_cells.begin(); it != closed_cells.end(); it++) {
             std::cout << "\t\t(" << it->first << "," << it->second << ")" << std::endl;
@@ -83,8 +80,11 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
     return Maze(result);
 }
 
-std::vector<std::pair<int, int>> MazeGenerator::calculateNeighbours(bool** maze, unsigned int height, unsigned int width,
-        unsigned int y, unsigned int x, bool state){
+std::vector<std::pair<int, int>> MazeGenerator::calculateNeighbours(std::vector<std::vector<bool>> maze,
+    unsigned int y, unsigned int x, bool state) {
+    unsigned int height = maze.size();
+    unsigned int width = maze[0].size();
+
     std::vector<std::pair<int, int>> neighbours;
 
     if (y >= 2 && maze[y-2][x] == state) {

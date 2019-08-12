@@ -53,7 +53,7 @@ TEST_F(MazeGeneratorTest, GenerateAlwaysSelectingFirst) {
 
     Maze maze = generator.generate(&ig, height, width);
 
-    bool** actual = maze.grid();
+    std::vector<std::vector<bool>> actual = maze.grid();
     for (unsigned int i = 0; i < height; ++i) {
         for (unsigned int j = 0; j < width; ++j) {
             ASSERT_EQ(expected[i][j], actual[i][j]);
