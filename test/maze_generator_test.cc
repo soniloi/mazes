@@ -67,7 +67,7 @@ TEST_F(MazeGeneratorTest, GenerateAlwaysSelectingFirst) {
     ASSERT_EQ(1, start_point.first);
     ASSERT_EQ(1, start_point.second);
     ASSERT_EQ(3, finish_point.first);
-    ASSERT_EQ(3, finish_point.second);
+    ASSERT_EQ(5, finish_point.second);
 }
 }
 

@@ -18,21 +18,8 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         result[i] = MazeRow(width, false);
     }
 
-    // TODO: randomization should preferably choose coords near a corner
     unsigned int start_y = get_valid_index(ig, height);
     unsigned int start_x = get_valid_index(ig, width);
-
-    unsigned int finish_y = 1;
-    if (finish_y == start_y) {
-        finish_y += 2;
-    }
-    unsigned int finish_x = 1;
-    if (finish_x == start_x) {
-        finish_x += 2;
-    }
-
-    Coordinates start_point = Coordinates(start_y, start_x);
-    Coordinates finish_point = Coordinates(finish_y, finish_x);
 
     unsigned int frontier_cell_y = start_y;
     unsigned int frontier_cell_x = start_x;
@@ -96,6 +83,9 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         }
         */
     }
+
+    Coordinates start_point = Coordinates(start_y, start_x);
+    Coordinates finish_point = Coordinates(frontier_cell_y, frontier_cell_x);
     return Maze(result, start_point, finish_point);
 }
 
