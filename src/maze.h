@@ -7,7 +7,7 @@ class Maze {
 public:
     using MazeRow = std::vector<bool>;
     using MazeGrid = std::vector<MazeRow>;
-    using Coordinates = std::pair<int, int>;
+    using Coordinates = std::pair<unsigned int, unsigned int>;
     Maze(MazeGrid grid, Coordinates start, Coordinates finish);
     MazeGrid grid();
     Coordinates start();
