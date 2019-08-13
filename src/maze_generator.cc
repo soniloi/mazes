@@ -5,7 +5,7 @@
 
 using MazeRow = Maze::MazeRow;
 using MazeGrid = Maze::MazeGrid;
-using Coordinates = MazeGenerator::Coordinates;
+using Coordinates = Maze::Coordinates;
 
 Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int width) {
     assert(height >= 3 && "Height must be at least 3");
@@ -21,6 +21,19 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
     // TODO: randomization should preferably choose coords near a corner
     unsigned int start_y = get_valid_index(ig, height);
     unsigned int start_x = get_valid_index(ig, width);
+
+    unsigned int finish_y = 1;
+    if (finish_y == start_y) {
+        finish_y += 2;
+    }
+    unsigned int finish_x = 1;
+    if (finish_x == start_x) {
+        finish_x += 2;
+    }
+
+    Coordinates start_point = Coordinates(start_y, start_x);
+    Coordinates finish_point = Coordinates(finish_y, finish_x);
+
     unsigned int frontier_cell_y = start_y;
     unsigned int frontier_cell_x = start_x;
 
@@ -83,7 +96,7 @@ Maze MazeGenerator::generate(IntGenerator* ig, unsigned int height, unsigned int
         }
         */
     }
-    return Maze(result);
+    return Maze(result, start_point, finish_point);
 }
 
 unsigned int MazeGenerator::get_valid_index(IntGenerator* ig, unsigned int limit) {

@@ -8,6 +8,7 @@ using testing::_;
 using testing::Return;
 
 using MazeGrid = Maze::MazeGrid;
+using Coordinates = Maze::Coordinates;
 
 namespace {
 
@@ -45,7 +46,7 @@ TEST_F(MazeGeneratorTest, GenerateAlwaysSelectingFirst) {
     unsigned int height = 5;
     unsigned int width = 7;
     EXPECT_CALL(ig, generate(0, _)).WillRepeatedly(Return(0));
-    bool expected[height][width] = {
+    bool expected_grid[height][width] = {
         {false, false, false, false, false, false, false},
         {false, true,  true,  true,  true,  true,  false},
         {false, true,  false, true,  false, true,  false},
@@ -55,12 +56,18 @@ TEST_F(MazeGeneratorTest, GenerateAlwaysSelectingFirst) {
 
     Maze maze = generator.generate(&ig, height, width);
 
-    MazeGrid actual = maze.grid();
+    MazeGrid actual_grid = maze.grid();
     for (unsigned int i = 0; i < height; ++i) {
         for (unsigned int j = 0; j < width; ++j) {
-            ASSERT_EQ(expected[i][j], actual[i][j]);
+            ASSERT_EQ(expected_grid[i][j], actual_grid[i][j]);
         }
     }
+    Coordinates start_point = maze.start();
+    Coordinates finish_point = maze.finish();
+    ASSERT_EQ(1, start_point.first);
+    ASSERT_EQ(1, start_point.second);
+    ASSERT_EQ(3, finish_point.first);
+    ASSERT_EQ(3, finish_point.second);
 }
 }
 
