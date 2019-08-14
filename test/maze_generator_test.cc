@@ -20,14 +20,14 @@ protected:
 
 TEST_F(MazeGeneratorTest, GenerateSmallHeight) {
     EXPECT_DEATH({
-        generator.generate(&ig, 2, 11);
-    }, ".*Height must be at least 3");
+        generator.generate(&ig, 3, 11);
+    }, ".*Height must be at least 5");
 }
 
 TEST_F(MazeGeneratorTest, GenerateSmallWidth) {
     EXPECT_DEATH({
         generator.generate(&ig, 7, 1);
-    }, ".*Width must be at least 3");
+    }, ".*Width must be at least 5");
 }
 
 TEST_F(MazeGeneratorTest, GenerateEvenHeight) {
