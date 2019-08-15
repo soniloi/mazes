@@ -10,6 +10,7 @@ CC = g++
 
 LFLAGS = -Wall
 CFLAGS = -Wall -c -O0 --std=c++11 -g
+SDL_LFLAGS = -lSDL2 -lSDL2_image
 COMPILE = $(CC) $(CFLAGS)
 LINK = $(CC) $(LFLAGS)
 
@@ -17,7 +18,7 @@ SRCS := $(wildcard $(SRCDIR)/*.cc)
 OBJS := $(patsubst $(SRCDIR)/%.cc, $(OBJDIR)/%.o, $(SRCS))
 
 $(APP): $(OBJS) | $(BINDIR)
-	$(LINK) $^ -o $(BINDIR)/$@
+	$(LINK) $^ $(SDL_LFLAGS) -o $(BINDIR)/$@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	$(COMPILE) $< -o $@

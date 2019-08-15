@@ -3,6 +3,7 @@
 #include "maze.h"
 #include "maze_generator.h"
 #include "random_int_generator.h"
+#include "maze_display.h"
 
 using MazeGrid = Maze::MazeGrid;
 using Coordinates = Maze::Coordinates;
@@ -39,4 +40,11 @@ int main(int argc, char ** argv) {
 
     std::cout << "start point: (" << start_point.first << "," << start_point.second << ")" << std::endl;
     std::cout << "finish point: (" << finish_point.first << "," << finish_point.second << ")" << std::endl;
+
+    MazeDisplay display;
+    if (!display.init(height, width)) {
+        exit(EXIT_FAILURE);
+    }
+
+    display.display(maze);
 }
