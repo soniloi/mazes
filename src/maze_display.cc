@@ -1,5 +1,7 @@
 #include "maze_display.h"
 
+using MazeGrid = Maze::MazeGrid;
+
 MazeDisplay::~MazeDisplay() {
     SDL_DestroyWindow(this->window);
     SDL_Quit();
@@ -58,6 +60,20 @@ bool MazeDisplay::init_media(std::string path) {
         return false;
     }
 
+    SDL_Rect wall_block_clip;
+    wall_block_clip.x = 0;
+    wall_block_clip.y = 0;
+    wall_block_clip.w = DOTS_PER_CELL;
+    wall_block_clip.h = DOTS_PER_CELL;
+    this->blocks[CellType::Wall] = wall_block_clip;
+
+    SDL_Rect passage_block_clip;
+    passage_block_clip.x = 0;
+    passage_block_clip.y = DOTS_PER_CELL;
+    passage_block_clip.w = DOTS_PER_CELL;
+    passage_block_clip.h = DOTS_PER_CELL;
+    this->blocks[CellType::Passage] = passage_block_clip;
+
     SDL_FreeSurface(surface);
     return true;
 }
@@ -75,8 +91,21 @@ void MazeDisplay::display(Maze maze) {
 
         SDL_RenderClear(this->renderer);
 
-        SDL_RenderCopy(this->renderer, this->texture, NULL, NULL);
+        display_grid(maze.grid());
 
         SDL_RenderPresent(this->renderer);
     }
 }
+
+void MazeDisplay::display_grid(MazeGrid grid) {
+    for (unsigned int i = 0; i < grid.size() ; ++i) {
+        for (unsigned int j = 0; j < grid[0].size(); ++j) {
+            int x = j * DOTS_PER_CELL;
+            int y = i * DOTS_PER_CELL;
+            SDL_Rect cell_rect = this->blocks[grid[i][j]];
+            SDL_Rect render_rect = {x, y, cell_rect.w, cell_rect.h};
+            SDL_RenderCopy(this->renderer, this->texture, &cell_rect, &render_rect);
+        }
+    }
+}
+
