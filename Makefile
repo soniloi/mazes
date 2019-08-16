@@ -37,8 +37,8 @@ clean:
 	$(RM_RF) $(OBJDIR) $(BINDIR) $(OBJDIR_TEST) $(BINDIR_TEST)
 Debug: $(APP)
 
-OBJ_APP = $(OBJDIR)/$(APP).o
-OBJS_TESTING = $(filter-out $(OBJ_APP), $(OBJS))
+OBJS_NON_TESTING = $(OBJDIR)/$(APP).o $(OBJDIR)/maze_display.o
+OBJS_TESTING = $(filter-out $(OBJS_NON_TESTING), $(OBJS))
 
 SRCDIR_TEST = test
 OBJDIR_TEST = testobj
