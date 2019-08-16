@@ -41,3 +41,6 @@ bin/*
 testobj/*
 testbin/*
 
+# Resources
+res/*
+
