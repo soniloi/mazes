@@ -28,7 +28,7 @@ int main(int argc, char ** argv) {
             else if (i == finish_point.first && j == finish_point.second) {
                 std::cout << "▷◁";
             }
-            else if (!grid[i][j]) {
+            else if (grid[i][j] == CellType::Wall) {
                 std::cout << "██";
             }
             else {

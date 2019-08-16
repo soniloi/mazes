@@ -46,12 +46,12 @@ TEST_F(MazeGeneratorTest, GenerateAlwaysSelectingFirst) {
     unsigned int height = 5;
     unsigned int width = 7;
     EXPECT_CALL(ig, generate(0, _)).WillRepeatedly(Return(0));
-    bool expected_grid[height][width] = {
-        {false, false, false, false, false, false, false},
-        {false, true,  true,  true,  true,  true,  false},
-        {false, true,  false, true,  false, true,  false},
-        {false, true,  false, true,  false, true,  false},
-        {false, false, false, false, false, false, false}
+    CellType expected_grid[height][width] = {
+        {CellType::Wall, CellType::Wall,    CellType::Wall,    CellType::Wall,    CellType::Wall,    CellType::Wall,    CellType::Wall},
+        {CellType::Wall, CellType::Passage, CellType::Passage, CellType::Passage, CellType::Passage, CellType::Passage, CellType::Wall},
+        {CellType::Wall, CellType::Passage, CellType::Wall,    CellType::Passage, CellType::Wall,    CellType::Passage, CellType::Wall},
+        {CellType::Wall, CellType::Passage, CellType::Wall,    CellType::Passage, CellType::Wall,    CellType::Passage, CellType::Wall},
+        {CellType::Wall, CellType::Wall,    CellType::Wall,    CellType::Wall,    CellType::Wall,    CellType::Wall,    CellType::Wall}
     };
 
     Maze maze = generator.generate(&ig, height, width);
