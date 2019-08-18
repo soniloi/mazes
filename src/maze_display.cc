@@ -13,6 +13,7 @@ bool MazeDisplay::init(unsigned int height, unsigned int width, std::string file
     if (success) {
         success = init_media(filepath);
     }
+    init_clips(DOTS_PER_CELL);
     return success;
 }
 
@@ -60,22 +61,13 @@ bool MazeDisplay::init_media(std::string path) {
         return false;
     }
 
-    SDL_Rect wall_block_clip;
-    wall_block_clip.x = 0;
-    wall_block_clip.y = 0;
-    wall_block_clip.w = DOTS_PER_CELL;
-    wall_block_clip.h = DOTS_PER_CELL;
-    this->blocks[CellType::Wall] = wall_block_clip;
-
-    SDL_Rect passage_block_clip;
-    passage_block_clip.x = 0;
-    passage_block_clip.y = DOTS_PER_CELL;
-    passage_block_clip.w = DOTS_PER_CELL;
-    passage_block_clip.h = DOTS_PER_CELL;
-    this->blocks[CellType::Passage] = passage_block_clip;
-
     SDL_FreeSurface(surface);
     return true;
+}
+
+void MazeDisplay::init_clips(int block_size) {
+    this->clips[CellType::Wall] = {0, 0, block_size, block_size};
+    this->clips[CellType::Passage] = {0, block_size, block_size, block_size};
 }
 
 void MazeDisplay::display(Maze maze) {
@@ -102,7 +94,7 @@ void MazeDisplay::display_grid(MazeGrid grid) {
         for (unsigned int j = 0; j < grid[0].size(); ++j) {
             int x = j * DOTS_PER_CELL;
             int y = i * DOTS_PER_CELL;
-            SDL_Rect cell_rect = this->blocks[grid[i][j]];
+            SDL_Rect cell_rect = this->clips[grid[i][j]];
             SDL_Rect render_rect = {x, y, cell_rect.w, cell_rect.h};
             SDL_RenderCopy(this->renderer, this->texture, &cell_rect, &render_rect);
         }

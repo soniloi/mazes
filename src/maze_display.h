@@ -18,9 +18,10 @@ private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Texture* texture;
-    std::map<CellType, SDL_Rect> blocks;
+    std::map<CellType, SDL_Rect> clips;
     bool init_sdl(unsigned int height, unsigned int width);
     bool init_media(std::string path);
+    void init_clips(int block_size);
     void display_grid(Maze::MazeGrid grid);
 };
 
