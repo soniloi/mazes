@@ -22,8 +22,10 @@ private:
     std::map<CellType, SDL_Rect> clips;
     bool init_sdl(unsigned int height, unsigned int width);
     bool init_media(std::string block_path, std::string dot_path);
+    bool load_image(std::string path, SDL_Texture*& texture);
     void init_clips(int block_size);
     void display_grid(Maze::MazeGrid grid);
+    void display_dot(int x, int y);
 };
 
 #endif

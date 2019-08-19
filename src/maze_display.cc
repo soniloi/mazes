@@ -1,5 +1,6 @@
 #include "maze_display.h"
 
+using Coordinates = Maze::Coordinates;
 using MazeGrid = Maze::MazeGrid;
 
 MazeDisplay::~MazeDisplay() {
@@ -49,30 +50,28 @@ bool MazeDisplay::init_sdl(unsigned int height, unsigned int width) {
 }
 
 bool MazeDisplay::init_media(std::string block_path, std::string dot_path) {
-    SDL_Surface* block_surface = IMG_Load(block_path.c_str());
-    if (!block_surface) {
-        std::cerr << "Failed to load image " << block_path << ". Error: " << SDL_GetError() << std::endl;
-        return false;
+    bool success = load_image(block_path, this->block_texture);
+    if (success) {
+        success = load_image(dot_path, this->dot_texture);
     }
-    this->block_texture = SDL_CreateTextureFromSurface(this->renderer, block_surface);
-    if (!this->block_texture) {
-        std::cerr << "Failed to create texture from " << block_path << ". Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
-    SDL_FreeSurface(block_surface);
+    return success;
+}
 
-    SDL_Surface* dot_surface = IMG_Load(dot_path.c_str());
-    if (!dot_surface) {
-        std::cerr << "Failed to load image " << dot_path << ". Error: " << SDL_GetError() << std::endl;
+bool MazeDisplay::load_image(std::string path, SDL_Texture*& texture) {
+    SDL_Surface* surface = IMG_Load(path.c_str());
+    if (!surface) {
+        std::cerr << "Failed to load image " << path << ". Error: " << SDL_GetError() << std::endl;
         return false;
     }
-    SDL_SetColorKey(dot_surface, SDL_TRUE, SDL_MapRGB(dot_surface->format, 0, 0xFF, 0xFF));
-    this->dot_texture = SDL_CreateTextureFromSurface(this->renderer, dot_surface);
-    if (!this->dot_texture) {
-        std::cerr << "Failed to create texture from " << dot_path << ". Error: " << SDL_GetError() << std::endl;
+
+    SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 0, 0xFF, 0xFF));
+    texture = SDL_CreateTextureFromSurface(this->renderer, surface);
+    if (!texture) {
+        std::cerr << "Failed to create texture from " << path << ". Error: " << SDL_GetError() << std::endl;
         return false;
     }
-    SDL_FreeSurface(dot_surface);
+
+    SDL_FreeSurface(surface);
     return true;
 }
 
@@ -96,6 +95,9 @@ void MazeDisplay::display(Maze maze) {
 
         display_grid(maze.grid());
 
+        Coordinates start = maze.start();
+        display_dot(start.second * DOTS_PER_CELL, start.first * DOTS_PER_CELL);
+
         SDL_RenderPresent(this->renderer);
     }
 }
@@ -110,8 +112,10 @@ void MazeDisplay::display_grid(MazeGrid grid) {
             SDL_RenderCopy(this->renderer, this->block_texture, &cell_rect, &render_rect);
         }
     }
-    SDL_Rect dot_clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
-    SDL_Rect dot_render_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
-    SDL_RenderCopy(this->renderer, this->dot_texture, &dot_clip_rect, &dot_render_rect);
 }
 
+void MazeDisplay::display_dot(int x, int y) {
+    SDL_Rect dot_clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_Rect dot_render_rect = {x, y, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_RenderCopy(this->renderer, this->dot_texture, &dot_clip_rect, &dot_render_rect);
+}
