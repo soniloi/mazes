@@ -4,7 +4,11 @@ using Coordinates = Maze::Coordinates;
 using MazeGrid = Maze::MazeGrid;
 
 MazeDisplay::~MazeDisplay() {
+    SDL_DestroyTexture(this->block_texture);
+    SDL_DestroyTexture(this->dot_texture);
+    SDL_DestroyRenderer(this->renderer);
     SDL_DestroyWindow(this->window);
+    IMG_Quit();
     SDL_Quit();
 }
 
