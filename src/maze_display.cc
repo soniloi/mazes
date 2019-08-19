@@ -7,11 +7,11 @@ MazeDisplay::~MazeDisplay() {
     SDL_Quit();
 }
 
-bool MazeDisplay::init(unsigned int height, unsigned int width, std::string filepath) {
+bool MazeDisplay::init(unsigned int height, unsigned int width, std::string block_path, std::string dot_path) {
     bool success = true;
     success = init_sdl(height, width);
     if (success) {
-        success = init_media(filepath);
+        success = init_media(block_path, dot_path);
     }
     init_clips(DOTS_PER_CELL);
     return success;
@@ -48,20 +48,31 @@ bool MazeDisplay::init_sdl(unsigned int height, unsigned int width) {
     return true;
 }
 
-bool MazeDisplay::init_media(std::string path) {
-    SDL_Surface* surface = IMG_Load(path.c_str());
-    if (!surface) {
-        std::cerr << "Failed to load image " << path << ". Error: " << SDL_GetError() << std::endl;
+bool MazeDisplay::init_media(std::string block_path, std::string dot_path) {
+    SDL_Surface* block_surface = IMG_Load(block_path.c_str());
+    if (!block_surface) {
+        std::cerr << "Failed to load image " << block_path << ". Error: " << SDL_GetError() << std::endl;
         return false;
     }
-
-    this->texture = SDL_CreateTextureFromSurface(this->renderer, surface);
-    if (!this->texture) {
-        std::cerr << "Failed to create texture from " << path << ". Error: " << SDL_GetError() << std::endl;
+    this->block_texture = SDL_CreateTextureFromSurface(this->renderer, block_surface);
+    if (!this->block_texture) {
+        std::cerr << "Failed to create texture from " << block_path << ". Error: " << SDL_GetError() << std::endl;
         return false;
     }
+    SDL_FreeSurface(block_surface);
 
-    SDL_FreeSurface(surface);
+    SDL_Surface* dot_surface = IMG_Load(dot_path.c_str());
+    if (!dot_surface) {
+        std::cerr << "Failed to load image " << dot_path << ". Error: " << SDL_GetError() << std::endl;
+        return false;
+    }
+    SDL_SetColorKey(dot_surface, SDL_TRUE, SDL_MapRGB(dot_surface->format, 0, 0xFF, 0xFF));
+    this->dot_texture = SDL_CreateTextureFromSurface(this->renderer, dot_surface);
+    if (!this->dot_texture) {
+        std::cerr << "Failed to create texture from " << dot_path << ". Error: " << SDL_GetError() << std::endl;
+        return false;
+    }
+    SDL_FreeSurface(dot_surface);
     return true;
 }
 
@@ -96,8 +107,11 @@ void MazeDisplay::display_grid(MazeGrid grid) {
             int y = i * DOTS_PER_CELL;
             SDL_Rect cell_rect = this->clips[grid[i][j]];
             SDL_Rect render_rect = {x, y, cell_rect.w, cell_rect.h};
-            SDL_RenderCopy(this->renderer, this->texture, &cell_rect, &render_rect);
+            SDL_RenderCopy(this->renderer, this->block_texture, &cell_rect, &render_rect);
         }
     }
+    SDL_Rect dot_clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_Rect dot_render_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_RenderCopy(this->renderer, this->dot_texture, &dot_clip_rect, &dot_render_rect);
 }
 

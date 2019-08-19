@@ -42,7 +42,7 @@ int main(int argc, char ** argv) {
     std::cout << "finish point: (" << finish_point.first << "," << finish_point.second << ")" << std::endl;
 
     MazeDisplay display;
-    if (!display.init(height, width, "res/blocks.png")) {
+    if (!display.init(height, width, "res/blocks.png", "res/dot.png")) {
         exit(EXIT_FAILURE);
     }
 
