@@ -38,7 +38,7 @@ bool MazeDisplay::init_sdl(unsigned int height, unsigned int width) {
         return false;
     }
 
-    this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
+    this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!this->renderer) {
         std::cerr << "Failed to create renderer. Error: " << SDL_GetError() << std::endl;
         return false;
