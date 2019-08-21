@@ -1,7 +1,11 @@
 #include "maze_display.h"
 
-using Coordinates = Maze::Coordinates;
 using MazeGrid = Maze::MazeGrid;
+
+MazeDisplay::MazeDisplay(int width, int height) {
+    this->window_width = width * DOTS_PER_CELL;
+    this->window_height = height * DOTS_PER_CELL;
+}
 
 MazeDisplay::~MazeDisplay() {
     SDL_DestroyTexture(this->block_texture);
@@ -12,9 +16,9 @@ MazeDisplay::~MazeDisplay() {
     SDL_Quit();
 }
 
-bool MazeDisplay::init(unsigned int height, unsigned int width, std::string block_path, std::string dot_path) {
+bool MazeDisplay::init(std::string block_path, std::string dot_path) {
     bool success = true;
-    success = init_sdl(height, width);
+    success = init_sdl(window_height, window_width);
     if (success) {
         success = init_media(block_path, dot_path);
     }
@@ -23,9 +27,6 @@ bool MazeDisplay::init(unsigned int height, unsigned int width, std::string bloc
 }
 
 bool MazeDisplay::init_sdl(unsigned int height, unsigned int width) {
-    unsigned int window_height = height * DOTS_PER_CELL;
-    unsigned int window_width = width * DOTS_PER_CELL;
-
     if (SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr << "Failed to init SDL. Error: " << SDL_GetError() << std::endl;
         return false;
@@ -84,7 +85,7 @@ void MazeDisplay::init_clips(int block_size) {
     this->clips[CellType::Passage] = {0, block_size, block_size, block_size};
 }
 
-void MazeDisplay::display(Maze maze) {
+void MazeDisplay::display(Maze maze, Player* player) {
     bool quit = false;
     SDL_Event event;
 
@@ -93,14 +94,15 @@ void MazeDisplay::display(Maze maze) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
+            this->handler.handle_event(player, event);
         }
+
+        this->handler.move_player(player, window_width, window_height);
 
         SDL_RenderClear(this->renderer);
 
         display_grid(maze.grid());
-
-        Coordinates start = maze.start();
-        display_dot(start.second * DOTS_PER_CELL, start.first * DOTS_PER_CELL);
+        display_dot(player->position_x, player->position_y);
 
         SDL_RenderPresent(this->renderer);
     }

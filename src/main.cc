@@ -41,10 +41,11 @@ int main(int argc, char ** argv) {
     std::cout << "start point: (" << start_point.first << "," << start_point.second << ")" << std::endl;
     std::cout << "finish point: (" << finish_point.first << "," << finish_point.second << ")" << std::endl;
 
-    MazeDisplay display;
-    if (!display.init(height, width, "res/blocks.png", "res/dot.png")) {
+    MazeDisplay display(width, height);
+    if (!display.init("res/blocks.png", "res/dot.png")) {
         exit(EXIT_FAILURE);
     }
 
-    display.display(maze);
+    Player player(0, 0);
+    display.display(maze, &player);
 }
