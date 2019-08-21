@@ -6,15 +6,14 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "maze.h"
-#include "player.h"
+#include "game.h"
 #include "player_event_handler.h"
 
 class MazeDisplay {
 public:
     MazeDisplay(int width, int height);
     bool init(std::string block_path, std::string dot_path);
-    void display(Maze maze, Player* player);
+    void display(Game* game);
     ~MazeDisplay();
 private:
     static const int DOTS_PER_CELL = 24;

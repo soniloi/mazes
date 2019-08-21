@@ -85,7 +85,10 @@ void MazeDisplay::init_clips(int block_size) {
     this->clips[CellType::Passage] = {0, block_size, block_size, block_size};
 }
 
-void MazeDisplay::display(Maze maze, Player* player) {
+void MazeDisplay::display(Game* game) {
+    Maze* maze = game->maze();
+    Player* player = game->player();
+
     bool quit = false;
     SDL_Event event;
 
@@ -101,7 +104,7 @@ void MazeDisplay::display(Maze maze, Player* player) {
 
         SDL_RenderClear(this->renderer);
 
-        display_grid(maze.grid());
+        display_grid(maze->grid());
         display_dot(player->position_x, player->position_y);
 
         SDL_RenderPresent(this->renderer);

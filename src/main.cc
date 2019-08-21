@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "game.h"
 #include "maze.h"
 #include "maze_generator.h"
 #include "random_int_generator.h"
@@ -47,5 +48,6 @@ int main(int argc, char ** argv) {
     }
 
     Player player(0, 0);
-    display.display(maze, &player);
+    Game game(&maze, &player);
+    display.display(&game);
 }
