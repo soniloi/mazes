@@ -100,7 +100,7 @@ void MazeDisplay::display(Game* game) {
             this->handler.handle_event(player, event);
         }
 
-        this->handler.move_player(player, window_width, window_height);
+        this->handler.move_player(player, DOTS_PER_CELL, window_width, window_height);
 
         SDL_RenderClear(this->renderer);
 
