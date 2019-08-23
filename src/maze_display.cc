@@ -97,11 +97,11 @@ void MazeDisplay::display(Game* game) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
-            this->handler.handle_event(player, event);
+            this->handler.handle_event(*player, event);
         }
 
         MazeGrid grid = maze->grid();
-        this->handler.move_player(player, grid[0].size(), grid.size());
+        this->handler.move_player(*player, grid);
 
         SDL_RenderClear(this->renderer);
 
