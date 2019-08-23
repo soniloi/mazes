@@ -100,11 +100,12 @@ void MazeDisplay::display(Game* game) {
             this->handler.handle_event(player, event);
         }
 
-        this->handler.move_player(player, DOTS_PER_CELL, window_width, window_height);
+        MazeGrid grid = maze->grid();
+        this->handler.move_player(player, grid[0].size(), grid.size());
 
         SDL_RenderClear(this->renderer);
 
-        display_grid(maze->grid());
+        display_grid(grid);
         display_dot(player->position_x, player->position_y);
 
         SDL_RenderPresent(this->renderer);
@@ -123,7 +124,9 @@ void MazeDisplay::display_grid(MazeGrid grid) {
     }
 }
 
-void MazeDisplay::display_dot(int x, int y) {
+void MazeDisplay::display_dot(int position_x, int position_y) {
+    int x = position_x * DOTS_PER_CELL;
+    int y = position_y * DOTS_PER_CELL;
     SDL_Rect dot_clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
     SDL_Rect dot_render_rect = {x, y, DOTS_PER_CELL, DOTS_PER_CELL};
     SDL_RenderCopy(this->renderer, this->dot_texture, &dot_clip_rect, &dot_render_rect);

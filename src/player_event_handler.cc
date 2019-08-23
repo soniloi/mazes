@@ -21,14 +21,14 @@ void PlayerEventHandler::handle_event(Player* player, SDL_Event& event) {
     }
 }
 
-void PlayerEventHandler::move_player(Player* player, int player_dot_size, int window_width, int window_height) {
-    player->position_x = calculate_next(player->position_x, player->velocity_x, player_dot_size, window_width);
-    player->position_y = calculate_next(player->position_y, player->velocity_y, player_dot_size, window_height);
+void PlayerEventHandler::move_player(Player* player, int grid_width, int grid_height) {
+    player->position_x = calculate_next(player->position_x, player->velocity_x, grid_width);
+    player->position_y = calculate_next(player->position_y, player->velocity_y, grid_height);
 }
 
-int PlayerEventHandler::calculate_next(int current_position, int velocity, int player_dot_size, int limit) {
+int PlayerEventHandler::calculate_next(int current_position, int velocity, int limit) {
     int next = current_position + velocity;
-    if (next < 0 || next + player_dot_size > limit) {
+    if (next < 0 || next >= limit) {
         next -= velocity;
     }
     return next;

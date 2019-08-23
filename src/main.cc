@@ -47,7 +47,7 @@ int main(int argc, char ** argv) {
         exit(EXIT_FAILURE);
     }
 
-    Player player(0, 0);
+    Player player(start_point.second, start_point.first);
     Game game(&maze, &player);
     display.display(&game);
 }

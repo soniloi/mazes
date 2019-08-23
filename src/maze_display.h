@@ -30,7 +30,7 @@ private:
     bool load_image(std::string path, SDL_Texture*& texture);
     void init_clips(int block_size);
     void display_grid(Maze::MazeGrid grid);
-    void display_dot(int x, int y);
+    void display_dot(int position_x, int position_y);
 };
 
 #endif

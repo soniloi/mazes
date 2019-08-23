@@ -45,7 +45,7 @@ TEST_F(PlayerEventHandlerTest, HandleEventKeyDownNoRepeatArrow) {
 
     handler.handle_event(&player, event);
 
-    ASSERT_EQ(12, player.velocity_x);
+    ASSERT_EQ(1, player.velocity_x);
     ASSERT_EQ(0, player.velocity_y);
 }
 
@@ -77,30 +77,30 @@ TEST_F(PlayerEventHandlerTest, HandleEventKeyUpNoRepeatArrow) {
 
     ASSERT_EQ(0, player.position_x);
     ASSERT_EQ(0, player.position_y);
-    ASSERT_EQ(-12, player.velocity_x);
+    ASSERT_EQ(-1, player.velocity_x);
     ASSERT_EQ(0, player.velocity_y);
 }
 
 TEST_F(PlayerEventHandlerTest, MovePlayerWithinWindowLimits) {
-    Player player(56, 37);
-    player.velocity_x = 18;
-    player.velocity_y = -24;
+    Player player(12, 4);
+    player.velocity_x = 7;
+    player.velocity_y = -2;
 
-    handler.move_player(&player, 6, 80, 50);
+    handler.move_player(&player, 20, 13);
 
-    ASSERT_EQ(74, player.position_x);
-    ASSERT_EQ(13, player.position_y);
+    ASSERT_EQ(19, player.position_x);
+    ASSERT_EQ(2, player.position_y);
 }
 
 TEST_F(PlayerEventHandlerTest, MovePlayerExceedWindowLimits) {
-    Player player(56, 37);
-    player.velocity_x = 19;
-    player.velocity_y = -39;
+    Player player(12, 4);
+    player.velocity_x = 8;
+    player.velocity_y = -7;
 
-    handler.move_player(&player, 6, 80, 50);
+    handler.move_player(&player, 20, 13);
 
-    ASSERT_EQ(56, player.position_x);
-    ASSERT_EQ(37, player.position_y);
+    ASSERT_EQ(12, player.position_x);
+    ASSERT_EQ(4, player.position_y);
 }
 }
 
