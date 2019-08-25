@@ -109,6 +109,11 @@ void GameRunner::run(Game* game) {
         Coordinates finish_point = maze->finish();
         this->handler.move_player(*player, grid);
         render_game(grid, finish_point, player);
+        if (finished(finish_point, player)) {
+            // TODO: continue, or display something different on finishing maze
+            SDL_Delay(3000);
+            quit = true;
+        }
     }
 }
 
@@ -138,4 +143,8 @@ void GameRunner::render_cell(int position_x, int position_y, SDL_Texture*& textu
     SDL_Rect clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
     SDL_Rect render_rect = {x, y, DOTS_PER_CELL, DOTS_PER_CELL};
     SDL_RenderCopy(this->renderer, texture, &clip_rect, &render_rect);
+}
+
+bool GameRunner::finished(Coordinates& finish_point, Player* player) {
+    return (unsigned) player->position_x == finish_point.second && (unsigned) player->position_y == finish_point.first;
 }

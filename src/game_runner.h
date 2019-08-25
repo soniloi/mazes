@@ -33,6 +33,7 @@ private:
     void render_game(Maze::MazeGrid& grid, Maze::Coordinates& finish_point, Player* player);
     void render_grid(Maze::MazeGrid& grid);
     void render_cell(int position_x, int position_y, SDL_Texture*& texture);
+    bool finished(Maze::Coordinates& finish_point, Player* player);
 };
 
 #endif
