@@ -1,14 +1,14 @@
-#include "maze_display.h"
+#include "game_runner.h"
 
 using Coordinates = Maze::Coordinates;
 using MazeGrid = Maze::MazeGrid;
 
-MazeDisplay::MazeDisplay(int width, int height) {
+GameRunner::GameRunner(int width, int height) {
     this->window_width = width * DOTS_PER_CELL;
     this->window_height = height * DOTS_PER_CELL;
 }
 
-MazeDisplay::~MazeDisplay() {
+GameRunner::~GameRunner() {
     SDL_DestroyTexture(this->block_texture);
     SDL_DestroyTexture(this->finish_texture);
     SDL_DestroyTexture(this->dot_texture);
@@ -18,7 +18,7 @@ MazeDisplay::~MazeDisplay() {
     SDL_Quit();
 }
 
-bool MazeDisplay::init(std::string block_path, std::string finish_path, std::string dot_path) {
+bool GameRunner::init(std::string block_path, std::string finish_path, std::string dot_path) {
     bool success = true;
     success = init_sdl(window_height, window_width);
     if (success) {
@@ -28,7 +28,7 @@ bool MazeDisplay::init(std::string block_path, std::string finish_path, std::str
     return success;
 }
 
-bool MazeDisplay::init_sdl(unsigned int height, unsigned int width) {
+bool GameRunner::init_sdl(unsigned int height, unsigned int width) {
     if (SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr << "Failed to init SDL. Error: " << SDL_GetError() << std::endl;
         return false;
@@ -56,7 +56,7 @@ bool MazeDisplay::init_sdl(unsigned int height, unsigned int width) {
     return true;
 }
 
-bool MazeDisplay::init_media(std::string block_path, std::string finish_path, std::string dot_path) {
+bool GameRunner::init_media(std::string block_path, std::string finish_path, std::string dot_path) {
     bool success = load_image(block_path, this->block_texture);
     if (success) {
         success = load_image(finish_path, this->finish_texture);
@@ -67,7 +67,7 @@ bool MazeDisplay::init_media(std::string block_path, std::string finish_path, st
     return success;
 }
 
-bool MazeDisplay::load_image(std::string path, SDL_Texture*& texture) {
+bool GameRunner::load_image(std::string path, SDL_Texture*& texture) {
     SDL_Surface* surface = IMG_Load(path.c_str());
     if (!surface) {
         std::cerr << "Failed to load image " << path << ". Error: " << SDL_GetError() << std::endl;
@@ -85,12 +85,12 @@ bool MazeDisplay::load_image(std::string path, SDL_Texture*& texture) {
     return true;
 }
 
-void MazeDisplay::init_clips(int block_size) {
+void GameRunner::init_clips(int block_size) {
     this->clips[CellType::Wall] = {0, 0, block_size, block_size};
     this->clips[CellType::Passage] = {0, block_size, block_size, block_size};
 }
 
-void MazeDisplay::display(Game* game) {
+void GameRunner::run(Game* game) {
     Maze* maze = game->maze();
     Player* player = game->player();
 
@@ -108,18 +108,19 @@ void MazeDisplay::display(Game* game) {
         MazeGrid grid = maze->grid();
         Coordinates finish_point = maze->finish();
         this->handler.move_player(*player, grid);
-
-        SDL_RenderClear(this->renderer);
-
-        display_grid(grid);
-        display_cell(finish_point.second, finish_point.first, this->finish_texture);
-        display_cell(player->position_x, player->position_y, this->dot_texture);
-
-        SDL_RenderPresent(this->renderer);
+        render_game(grid, finish_point, player);
     }
 }
 
-void MazeDisplay::display_grid(MazeGrid grid) {
+void GameRunner::render_game(MazeGrid& grid, Coordinates& finish_point, Player* player) {
+    SDL_RenderClear(this->renderer);
+    render_grid(grid);
+    render_cell(finish_point.second, finish_point.first, this->finish_texture);
+    render_cell(player->position_x, player->position_y, this->dot_texture);
+    SDL_RenderPresent(this->renderer);
+}
+
+void GameRunner::render_grid(MazeGrid& grid) {
     for (unsigned int i = 0; i < grid.size() ; ++i) {
         for (unsigned int j = 0; j < grid[0].size(); ++j) {
             int x = j * DOTS_PER_CELL;
@@ -131,7 +132,7 @@ void MazeDisplay::display_grid(MazeGrid grid) {
     }
 }
 
-void MazeDisplay::display_cell(int position_x, int position_y, SDL_Texture*& texture) {
+void GameRunner::render_cell(int position_x, int position_y, SDL_Texture*& texture) {
     int x = position_x * DOTS_PER_CELL;
     int y = position_y * DOTS_PER_CELL;
     SDL_Rect clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};

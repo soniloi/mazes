@@ -37,7 +37,7 @@ clean:
 	$(RM_RF) $(OBJDIR) $(BINDIR) $(OBJDIR_TEST) $(BINDIR_TEST)
 Debug: $(APP)
 
-OBJS_NON_TESTING = $(OBJDIR)/$(APP).o $(OBJDIR)/maze_display.o
+OBJS_NON_TESTING = $(OBJDIR)/$(APP).o $(OBJDIR)/game_runner.o
 OBJS_TESTING = $(filter-out $(OBJS_NON_TESTING), $(OBJS))
 
 SRCDIR_TEST = test

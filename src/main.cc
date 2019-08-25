@@ -4,7 +4,7 @@
 #include "maze.h"
 #include "maze_generator.h"
 #include "random_int_generator.h"
-#include "maze_display.h"
+#include "game_runner.h"
 
 using MazeGrid = Maze::MazeGrid;
 using Coordinates = Maze::Coordinates;
@@ -42,12 +42,12 @@ int main(int argc, char ** argv) {
     std::cout << "start point: (" << start_point.first << "," << start_point.second << ")" << std::endl;
     std::cout << "finish point: (" << finish_point.first << "," << finish_point.second << ")" << std::endl;
 
-    MazeDisplay display(width, height);
-    if (!display.init("res/blocks.png", "res/finish.png", "res/dot.png")) {
+    GameRunner runner(width, height);
+    if (!runner.init("res/blocks.png", "res/finish.png", "res/dot.png")) {
         exit(EXIT_FAILURE);
     }
 
     Player player(start_point.second, start_point.first);
     Game game(&maze, &player);
-    display.display(&game);
+    runner.run(&game);
 }
