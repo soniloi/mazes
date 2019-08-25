@@ -1,5 +1,6 @@
 #include "maze_display.h"
 
+using Coordinates = Maze::Coordinates;
 using MazeGrid = Maze::MazeGrid;
 
 MazeDisplay::MazeDisplay(int width, int height) {
@@ -9,6 +10,7 @@ MazeDisplay::MazeDisplay(int width, int height) {
 
 MazeDisplay::~MazeDisplay() {
     SDL_DestroyTexture(this->block_texture);
+    SDL_DestroyTexture(this->finish_texture);
     SDL_DestroyTexture(this->dot_texture);
     SDL_DestroyRenderer(this->renderer);
     SDL_DestroyWindow(this->window);
@@ -16,11 +18,11 @@ MazeDisplay::~MazeDisplay() {
     SDL_Quit();
 }
 
-bool MazeDisplay::init(std::string block_path, std::string dot_path) {
+bool MazeDisplay::init(std::string block_path, std::string finish_path, std::string dot_path) {
     bool success = true;
     success = init_sdl(window_height, window_width);
     if (success) {
-        success = init_media(block_path, dot_path);
+        success = init_media(block_path, finish_path, dot_path);
     }
     init_clips(DOTS_PER_CELL);
     return success;
@@ -54,8 +56,11 @@ bool MazeDisplay::init_sdl(unsigned int height, unsigned int width) {
     return true;
 }
 
-bool MazeDisplay::init_media(std::string block_path, std::string dot_path) {
+bool MazeDisplay::init_media(std::string block_path, std::string finish_path, std::string dot_path) {
     bool success = load_image(block_path, this->block_texture);
+    if (success) {
+        success = load_image(finish_path, this->finish_texture);
+    }
     if (success) {
         success = load_image(dot_path, this->dot_texture);
     }
@@ -106,6 +111,7 @@ void MazeDisplay::display(Game* game) {
         SDL_RenderClear(this->renderer);
 
         display_grid(grid);
+        display_finish(maze);
         display_dot(player->position_x, player->position_y);
 
         SDL_RenderPresent(this->renderer);
@@ -122,6 +128,15 @@ void MazeDisplay::display_grid(MazeGrid grid) {
             SDL_RenderCopy(this->renderer, this->block_texture, &cell_rect, &render_rect);
         }
     }
+}
+
+void MazeDisplay::display_finish(Maze* maze) {
+    Coordinates finish_point = maze->finish();
+    int x = finish_point.second * DOTS_PER_CELL;
+    int y = finish_point.first * DOTS_PER_CELL;
+    SDL_Rect finish_clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_Rect finish_render_rect = {x, y, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_RenderCopy(this->renderer, this->finish_texture, &finish_clip_rect, &finish_render_rect);
 }
 
 void MazeDisplay::display_dot(int position_x, int position_y) {
