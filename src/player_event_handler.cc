@@ -24,14 +24,15 @@ void PlayerEventHandler::handle_event(Player& player, SDL_Event& event) {
 }
 
 void PlayerEventHandler::move_player(Player& player, MazeGrid& grid) {
-    player.position_x = calculate_next(player.position_x, player.velocity_x, grid[0].size());
-    player.position_y = calculate_next(player.position_y, player.velocity_y, grid.size());
-}
-
-int PlayerEventHandler::calculate_next(int current_position, int velocity, int limit) {
-    int next = current_position + velocity;
-    if (next < 0 || next >= limit) {
-        next -= velocity;
+    int next_x = player.position_x + player.velocity_x;
+    if (next_x < 0 || (unsigned) next_x >= grid[0].size() || grid[player.position_y][next_x] == CellType::Wall) {
+        next_x -= player.velocity_x;
     }
-    return next;
+    player.position_x = next_x;
+
+    int next_y = player.position_y + player.velocity_y;
+    if (next_y < 0 || (unsigned) next_y >= grid.size() || grid[next_y][player.position_x] == CellType::Wall) {
+        next_y -= player.velocity_y;
+    }
+    player.position_y = next_y;
 }

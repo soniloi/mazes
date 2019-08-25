@@ -20,10 +20,16 @@ protected:
         event.key = key;
         event.type = type;
     }
-    MazeGrid generate_grid(unsigned int height, unsigned int width) {
+    MazeGrid generate_grid(int width, std::vector<unsigned int>& pattern) {
+        int height = pattern.size();
         MazeGrid grid(height);
-        for (unsigned int i = 0; i < height; ++i) {
+        for (int i = 0; i < height; ++i) {
             grid[i] = MazeRow(width, CellType::Wall);
+            for (int j = 0; j < width; ++j) {
+                if ((pattern[i] >> j) & 1) {
+                    grid[i][j] = CellType::Passage;
+                }
+            }
         }
         return grid;
     }
@@ -91,28 +97,56 @@ TEST_F(PlayerEventHandlerTest, HandleEventKeyUpNoRepeatArrow) {
     ASSERT_EQ(0, player.velocity_y);
 }
 
-TEST_F(PlayerEventHandlerTest, MovePlayerWithinWindowLimits) {
-    Player player(12, 4);
-    player.velocity_x = 7;
-    player.velocity_y = -2;
-    MazeGrid grid = generate_grid(13, 20);
+TEST_F(PlayerEventHandlerTest, MovePlayerBelowWindowLimit) {
+    Player player(1, 0);
+    player.velocity_x = 0;
+    player.velocity_y = -1;
+    std::vector<unsigned int> pattern = {0x4007, 0x77D5, 0x155D, 0x7D71, 0x0405, 0x040F};
+    MazeGrid grid = generate_grid(16, pattern);
 
     handler.move_player(player, grid);
 
-    ASSERT_EQ(19, player.position_x);
+    ASSERT_EQ(1, player.position_x);
+    ASSERT_EQ(0, player.position_y);
+}
+
+TEST_F(PlayerEventHandlerTest, MovePlayerAboveWindowLimit) {
+    Player player(15, 2);
+    player.velocity_x = 1;
+    player.velocity_y = 0;
+    std::vector<unsigned int> pattern = {0x4007, 0x77D5, 0x155D, 0x7D71, 0x0405, 0x040F};
+    MazeGrid grid = generate_grid(16, pattern);
+
+    handler.move_player(player, grid);
+
+    ASSERT_EQ(15, player.position_x);
     ASSERT_EQ(2, player.position_y);
 }
 
-TEST_F(PlayerEventHandlerTest, MovePlayerExceedWindowLimits) {
-    Player player(12, 4);
-    player.velocity_x = 8;
-    player.velocity_y = -7;
-    MazeGrid grid = generate_grid(13, 20);
+TEST_F(PlayerEventHandlerTest, MovePlayerHitWall) {
+    Player player(5, 3);
+    player.velocity_x = 0;
+    player.velocity_y = 3;
+    std::vector<unsigned int> pattern = {0x4007, 0x77D5, 0x155D, 0x7D71, 0x0405, 0x040F};
+    MazeGrid grid = generate_grid(16, pattern);
 
     handler.move_player(player, grid);
 
-    ASSERT_EQ(12, player.position_x);
-    ASSERT_EQ(4, player.position_y);
+    ASSERT_EQ(5, player.position_x);
+    ASSERT_EQ(3, player.position_y);
+}
+
+TEST_F(PlayerEventHandlerTest, MovePlayerWithinLimits) {
+    Player player(5, 1);
+    player.velocity_x = 3;
+    player.velocity_y = 0;
+    std::vector<unsigned int> pattern = {0x4007, 0x77D5, 0x155D, 0x7D71, 0x0405, 0x040F};
+    MazeGrid grid = generate_grid(16, pattern);
+
+    handler.move_player(player, grid);
+
+    ASSERT_EQ(8, player.position_x);
+    ASSERT_EQ(1, player.position_y);
 }
 }
 

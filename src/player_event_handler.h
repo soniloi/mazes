@@ -12,7 +12,6 @@ public:
     void move_player(Player& player, Maze::MazeGrid& grid);
 private:
     static const int PLAYER_MOVEMENT_VELOCITY = 1;
-    int calculate_next(int current_position, int velocity, int limit);
 };
 
 #endif
