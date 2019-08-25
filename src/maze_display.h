@@ -31,8 +31,7 @@ private:
     bool load_image(std::string path, SDL_Texture*& texture);
     void init_clips(int block_size);
     void display_grid(Maze::MazeGrid grid);
-    void display_finish(Maze* maze);
-    void display_dot(int position_x, int position_y);
+    void display_cell(int position_x, int position_y, SDL_Texture*& texture);
 };
 
 #endif

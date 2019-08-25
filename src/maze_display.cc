@@ -106,13 +106,14 @@ void MazeDisplay::display(Game* game) {
         }
 
         MazeGrid grid = maze->grid();
+        Coordinates finish_point = maze->finish();
         this->handler.move_player(*player, grid);
 
         SDL_RenderClear(this->renderer);
 
         display_grid(grid);
-        display_finish(maze);
-        display_dot(player->position_x, player->position_y);
+        display_cell(finish_point.second, finish_point.first, this->finish_texture);
+        display_cell(player->position_x, player->position_y, this->dot_texture);
 
         SDL_RenderPresent(this->renderer);
     }
@@ -130,19 +131,10 @@ void MazeDisplay::display_grid(MazeGrid grid) {
     }
 }
 
-void MazeDisplay::display_finish(Maze* maze) {
-    Coordinates finish_point = maze->finish();
-    int x = finish_point.second * DOTS_PER_CELL;
-    int y = finish_point.first * DOTS_PER_CELL;
-    SDL_Rect finish_clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
-    SDL_Rect finish_render_rect = {x, y, DOTS_PER_CELL, DOTS_PER_CELL};
-    SDL_RenderCopy(this->renderer, this->finish_texture, &finish_clip_rect, &finish_render_rect);
-}
-
-void MazeDisplay::display_dot(int position_x, int position_y) {
+void MazeDisplay::display_cell(int position_x, int position_y, SDL_Texture*& texture) {
     int x = position_x * DOTS_PER_CELL;
     int y = position_y * DOTS_PER_CELL;
-    SDL_Rect dot_clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
-    SDL_Rect dot_render_rect = {x, y, DOTS_PER_CELL, DOTS_PER_CELL};
-    SDL_RenderCopy(this->renderer, this->dot_texture, &dot_clip_rect, &dot_render_rect);
+    SDL_Rect clip_rect = {0, 0, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_Rect render_rect = {x, y, DOTS_PER_CELL, DOTS_PER_CELL};
+    SDL_RenderCopy(this->renderer, texture, &clip_rect, &render_rect);
 }
